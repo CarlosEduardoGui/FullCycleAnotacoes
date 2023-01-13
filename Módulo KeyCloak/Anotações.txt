@@ -1,0 +1,83 @@
+------------------------ Processo de Autorização ------------------------
+	- Resource Owner
+	- Client
+	- Resource Server
+	- Authorization Server
+	
+------------------------ Conceitos OAuth 2 ------------------------
+	- É um framework de Autorização e NÃO de Autenticação;
+	- Então vamos imaginar que João possui uma conta do banco e sua esposa, Maria, pede para o
+	gerente do Banco, Marcelo, fazer uma transferência no nome de João. 
+	Neste caso será negada pois Maria, esposa de João, não tem autorização para fazer essa transferência.
+	Para isso ela vai no cartório juntamente com João e pede para fazer uma procuração onde João lhe concede
+	direitos para movimentar a sua conta.
+	Ela retorna no banco e pede novamente para realizar a transferência em nome do João e apresenta a procuração.
+	Marcelo liga ao cartório verificando se a procuração é realmente válida, confirmando que sim, o gerente
+	realiza a transferência;
+	
+	Neste caso hipotético, os personagens são em comparação aos conceitos tecnológicos:
+	João - Resource Owner;
+	Maria - Client;
+	Marcelo - Resource Server;
+	Cartório - Authorization Server;
+	
+						OAuth 2.0 "Flow"
+	+-----------+								 +-------------------+
+	|			|--(A)- Authorization Request -->|	 Resource Owner  |
+	|			|<-(B)- Authorization Grant -----|					 |
+	|			|								 +-------------------+
+	|			|
+	|			|--(C)- Authorization Grant ---->+-------------------+
+	|			|								 | Authorization	 |
+	|	Client	|<-(D)------- Access Token ------|	Server			 |
+	|			|								 +-------------------+
+	|			|
+	|			|								 +-------------------+
+	|			|--(E)------- Access Token ----->| 	  Resource       |
+	|			|								 |     Server        |
+	|			|<-(F)---- Protected Resource ---|					 |
+	|			|								 +-------------------+
+	+-----------+
+	
+------------------------ OpenId Connect ------------------------
+	- É uma camada de identidade que fica no topo do OAuth 2.0;
+	- Existem 8 flows do OpenId Connect;
+	
+	Abaixo segue um exemplo dele:
+	
+	SPA										User						Auth Server
+	 |								  		  |								|
+	 |                                		  |								|
+	 |---------- Posso acessar? ------------> |								|
+	 |<---------- Sim! ---------------------- |								|
+	 |										  |								|
+	 |------------ Inicia o processo de Auth ------------------------------>|
+	 |										  |      						|
+	 |										  |<-------- Faça Login --------|
+	 |										  |								|
+	 |										  |--------- Feito ------------>|
+	 |										  |								|
+	 |<----------------------------- Envia Auth Code -----------------------|
+	 |										  |								|
+	 |------------- Solicita Access Code e ID Token em troca do Auth Code ->|
+	 |										  |								|
+	 |<------------------------- Envia Acsess e ID Token -------------------|
+	 
+	 
+	-  O que é o id_token?
+		* Possui informações necessárias para garantir a autenticação do usuário, como ID, Email e informações;
+		  adicionais passadas pelo servidor de autenticação;
+		* JWT
+		* Padrão aberto que representa, de forma segura, solicitações de informação entre duas partes;
+		* Token é um código base64 que armazena um JSON;
+		* JWT possui 3 partes: Header, Payload e Signature;
+		
+------------------------ Conceitos KeyCloak ------------------------
+	- Realm:
+		* Separação lógica de contextos;
+		
+	- Clients:
+		* Aplicações que desejam realizar o processo de login;
+		
+	- Users:
+		* Usuários da aplicação;

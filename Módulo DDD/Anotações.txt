@@ -1,0 +1,40 @@
+================================== Elementos Táticos ==================================
+	- Quando estamos falando sobre DDD e precisamos olhar mais a funcod um bounded context;
+	
+	- Precisamos ser capazes de modelarmos de forma mais assertiva os seus principais
+	componentes, comportamentos e individualidades, bem como suas relações;
+	
+================================== Entidade ==================================
+	- "Uma entidade é algo único que é capaz de ser alterado de forma contínua
+	durante um longo período de tempo." - Vernon, Vaughn. Implementing Domain-Driven Design;
+	
+	- "Uma entidade é algo que possui uma continuidade em seu ciclo de vida e pode ser
+	distinguida independente dos atributos que são importantes parar a aplicação do usuario.
+	Pode ser uma pessoa, cidade, carro, um ticket de loteria ou uma transação bancaria."
+	Evans, Eric. Domain-Driven Design;
+	
+	- Uma Entidade é uma Identidade, ou seja, ela é única;
+	
+	- A modelagem sempre representa o negócio;
+		- Nunca usar classes anêmicas para representar uma entidade de negocio;
+		- Sempre usar métodos que representam uma regra de negócio da entidade;
+		- Expresividade semântica;
+	
+	- Uma Entidade sempre terá que reprentar o estado atual e correto daquele elemento;
+	- A Entidade sempre tem que ser confiável e consistente;
+	
+	- Uma Entidade sempre poderá ser autovalidada;
+	
+	- A Entidade é diferente de Modelo de dados, a Entidade é o negócio e o Modelo de dados é
+	os dados representados no banco de dados;
+	
+	- Como representar isso atravez da estrutura do projeto?
+		Complexidade do negocio (aonde se trata somente do negócio)
+		Domain
+		- Entity
+			- customer.cs (aqui está as regras de negocio)
+		
+		Complexidade acidental
+		Infra (aonde se é realizado a comunicação com o mundo externo)
+		- Model / Entity
+			- customer.cs / costumerModel.cs (aqui terá os gets e sets)

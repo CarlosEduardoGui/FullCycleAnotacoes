@@ -1,0 +1,182 @@
+==============================Conceito Microsserviços==============================
+	- São aplicações normais (podendo ser escrito em qualquer linguagem);
+	- Objetivos bem definidos (isso não implica que a aplicação vai ser pequena);
+	- Faz parte de um ecossistema;
+	- São independêntes/autônomos (ele precisa de resiliência);
+	- Se comunicam o tempo todo;
+
+==============================Diferenças entre Microsserviços e Monolíticos==============================
+	- Domínio:
+		- Monolíticos:
+			- O contexto está todo dentro de uma única aplicação;
+		- Microsserviços:
+			- O contexto é delimitado e bem definido entre os microsserviços;
+			
+	- Deploy:
+		- Monolíticos:
+			- O processo de deploy é mais complexo e mais arriscado;
+		- Microsserviços:
+			- O processo de deploy é mais simples e menos arriscado;
+	
+	- Organização das equipes:
+		- Monolíticos:
+			- Todas as equipes trablhando no mesmo sistema;
+		- Microsserviços:
+			- Equipes separadas por contextos tomando conta de vários microsserviços;
+	
+	- Começar o projeto / PoC
+		- Monolíticos:
+			- É mais simples;
+		- Microsserviços:
+			- Precisaria entender muito bem o domínio para não precisar ter o retrabalho;
+
+==============================Quando utilizar Microsserviços?==============================
+	- Escolar times é mais fácil usando microsserviços;
+	- Contextos bem definidos / área de negócio eventualmente será melhor trabalhar com microsserviços;
+	- Quando você tem maturidade nos processos de entrega (CI/CD, testes unitários, SREs) é mais recomendado usar microsserviços;
+	- Quando o time possui maturidade técnica é recomendado usar microsserviços;
+	- Quando você tem a necessidade de escala de apenas uma parte do sistema, é recomendado usar microsserviços;
+	- Quando eu preciso de tecnologias específicas em partes do sistema, é recomendado usar microsserviços;
+
+==============================Quando utilizar Monolíticos?==============================
+	- Iniciando um projeto na maior parte do tempo é mais recomendado começar pelo Monolíticos;
+	- Governança simplificada sobre tecnlogias (por exemplo, utilização do .NET como framework);
+	- Facilidade de contratação;
+	- Facilidade do treinamento dos devs;
+	- Tudo está centralizado no mesmo código fonte;
+	- Compartilhamento claro de libs (shared kernel);
+
+==============================Migração de monolitos para microsserviços==============================
+	- Separação de contextos (DDD);
+	- Evite o excesso de granulidade;
+	- Verifique dependências (monolito distribuido);
+	- Planeje o processo de migração dos bancos de dados;
+	- Planejar os Eventos;
+	- Não tenha medo de duplicidade de dados;
+	- Falta de consistência dos dados eventualmente;
+	- CI/CD - Testes - Ambiente, isso vai refletir na maturidade do time;
+	- Comece quebrando sistema não críticos;
+	
+==============================9 características de um sistema microsserviços por Martin Fowler==============================
+	1. Componente: É uma unidade de software que é substituível e também mutável e é possível realizar o deploy independênte;
+	2. Organizado pelas áreas de negócio: time que são compostos por indivíduos que participam de todas as áreas do negocio, sendo assim, cross funcional;
+	3. Produtos e não projetos: O time que desenvolveu o produto é responsável por realizar a manuntenção, continuidade e melhoria desse produto;
+	4. Pontos inteligentes e dumb pipes: Facilidade de comunicação entre os serviços, sem a necessidade de um serviço no meio para realizar a comunicação deles;
+	5. Governança descentralizada: Não ter a necessidade de seguir padronização, facilitando a maleabilidade do microsserviços;
+	6. Descentralização de dados: Os microsserviços precisam que eles proprios gerenciem os dados, isso irá implicar que eventualmente dados sejam duplicados;
+	7. Automação de infraestrutura: Criar um processo de automação de infraestrutura para conseguir trabalhar com mútiplos deploys e monitoramentos;
+	8. Desenhado para falhar: O sistema tem que estar desenhado para ter resiliência ao máximo;
+	9. Desenho Evolutivo: Capacidade de evoluir um componente sem afetar um outro;
+	
+==============================Resiliência==============================
+	- O que é resiliência?
+		- Resiliência é um conjunto de estratégias adotadas intencionalmente para a adaptação de um sistema quando uma falha ocorre;
+		- Ter estratégias de resiliência nos possibilita minimizar os riscos de perda de dados e transações importantes para o negócio;
+	
+	- Quais as estratégias?
+		- Proteger e ser Protegido:
+			- Um sistema em uma arquitetura distribuída precisa adotar mecanismos de autopreservação para garantir ao máximo sua operação com qualidade;
+			- Um sistema não pode ser "egoísta" ao ponto de realizar mais requisições em um sistema que está falhando;
+			- Um sistema lento no ar muitas vezes é pior do que umm sistema fora do ar (Efeito dominó);
+		
+		- HealthCheck:
+			- Sem sinais vitais, não é possível saber a "saúde" de um sistema (incluindo as suas dependências);
+			- Um sistema que não está saudável possui uma chance de se recuperar caso o tráfego pare de ser direcionado a ele temporariamente (self healing);
+			- HealthCheck de qualidade:
+				- HealthCheck passivo:
+					- É um healthCheck que somente é ativo quando um terceiro realiza esta operação para saber a "saúde" daquele sistema;
+				- HealthCheck ativo:
+					- É um healthCheck onde ele mesmo irá se monitorar (ou sistema terceiros) para verificar a sua "saúde";
+		
+		- Rate Limiting:
+			- Protege o sistema baseado no que ele foi projetado para suportar (consegue limitar a quantidade de requisições que o sistema irá receber);
+			- Preferência programada por tipo de client;
+			
+		- Circuit Breaker:
+			- Protege o sistema fazendo com que as requisições feitas para ele sejam negadas. Ex.: 500;
+			- Circuito fechado = Requisições chegam normalmente;
+			- Circuito aberto = Requisições não chegam ao sistema. Erro instantâneo ao client;
+			- Meio aberto = Permitido uma quantidade limitada de requisições para verificação se o sistema tem condições de voltar ao ar integralmente;
+		
+		- API Gateway:
+			- Garante que as requisições "inapropriadas" cheguem até o sitema. Ex.: usuário não autenticado;
+			- Implementa políticas de Rate Limiting, healthCheck, entre outras;
+			- Ajuda a organizar os microsserviços em contextos (agrupando os microsserviços - parecido com o BFF);
+	
+		- Service Mesh:
+			- Istio (https://istio.io/latest/about/service-mesh/);
+			- Controla o tráfego de rede;
+			- Evita implementações de proteção pelo próprio sistema;
+			- mTLS (https://freedomben.medium.com/what-is-mtls-and-how-does-it-work-9dcdbf6c1e41);
+			- Circuit breaker, Retry, Timeout, Fault Injection, entre outros;
+		
+		- Comunicação Assíncrona:
+			- Evita perda de dados;
+			- Não há perda de dados no envio de uma transação de o server estiver fora;
+			- Entender com profundidade o message broker / sistema de stream;
+		
+		- Garantias de entrega - Retry:
+			- Exponential backoff - Jitter:
+				- Realizar o Retry com o tempo predeterminado mais um número randômico. Ex.: 1 segundo + 0,465839 milisegundos. Evitando que se outros serviços
+				façam as chamas no mesmo espaço de tempo;
+			
+		- Situações Complexas:
+			- O que acontece se o message broker cair?
+				- Haverá perda de mensagens?
+				- Seu sistema ficará fora do ar?
+				- Como garantir resiliência?
+			- Transaction outbox:
+				- Salvar a mensagem que você iria enviar para o message broker em uma tabela;
+		
+		- Garantias de Recebimento:
+			- Auto Ack = false e commit da mensagem manualmente;
+			- Prefetch alinhado a volumetria;
+			
+		- Microsserviços:
+			- Idempotência:
+				- Mensagens duplicadas;
+			- Indepêndencia:
+			- Políticas claras de fallback;
+			
+		- Observabilidade:
+			- APM;
+			- Tracing distruibuído (https://www.jaegertracing.io/);
+			- Métricas personalizadas;
+			- Spans personalizados;
+			- Open Temeletry (https://opentelemetry.io/);
+
+==============================Coreografia vs Orquestração==============================
+		- Coreografia, o que é?
+			- Chamadas independêntes realizadas pelos microsserviços que acabam causando uma malha de comunicações extremamente complexa conforma a quantidade
+			de microsserviços aumenta;
+			
+		- Orquestração, o que é?
+			- Controlador de fluxos de chamadas entre microsserviços;
+		
+		- Estratégias de APIs:
+			- Criação de API Gateway (proxy), assim agrupando microsserviços por contextos para organizar melhor a rede e aplicar regras caso precise;
+
+==============================Padrões mais Comuns para se trabalhar com Microsserviços==============================
+	- API Composition Pattern - Sem regra de negócio:
+	
+		- Como criar um relatório sendo que parte das informações estão no serviço A e outra parte no serviço B?
+			- Podemos criar um Service composer para abstrair as duas chamadas em uma única;
+			- Podemos também utilizar o API Gateway que irá realizar a mesma tarefa do Service;
+		
+		- Vantagens:
+			- Compor informações de diversas fontes;
+		
+		- Desvantagens:
+			- Disponilidade dos serviços;
+			- Consistência nos dados;
+			- Aumento na complexidade por juntar essas informações "picotadas";
+			- Criar um serviço para se comunicar com outros serviços (Service Composer);
+			- Alta latência;
+			- Realizar de forma Síncrona;
+	
+	- API Composition Pattern - Com regras de negócio:
+		
+		- Como criar uma promoção personalidade para algum cliente quando o serviço A tem os clientes e o B tem os produtos?
+			- O Service: Composer pode realizar esta tarefa em backgroud mas as complexidades e problemas de realizar de forma síncrona ainda permanecem;
+			- Resiliência:
+				- Caso o serviço A não entregue as informações mas o B sim, podemos dar continuidade?

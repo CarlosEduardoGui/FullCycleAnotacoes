@@ -1,0 +1,131 @@
+====================================================================================================================================================================
+Módulo: Docker
+
+Como funcionam os Container?
+	Namespaces (Isola os processos):
+		Um container é um processo isolado, contendo um container "pai" e um container "filho" (matando o pai mata o filho)
+		isso vem de um processo do S.O. que chama "namespace" que realiza a mesma tarefa do container, porém, o container
+		somente tem visão dos processos dele próprio e não do S.O.
+		Basicamente, é um container é um processo com subprocessos rodando emulando um S.O.;
+
+	Cgroups (Controla os recursos computacionais):
+		Os processo são isolados para restringir a quantidade de recursos que um processo pode consumir para não afetar
+		os demais processos;
+		
+	FileSystem (OFS):
+		Se por acaso, você tem uma imagem que tem duas dependências, elas são reaproveitadas caso você duplique esta imagem;
+		O docker, ele é leve, pois não precisa de um S.O. dentro dele, ele usa apenas as depêndencias necessárias para
+		montar a imagem;
+
+	Imagens:
+		São um conjunto de dependências encadeadas que podem ser utilizadas e reutilizadas pelo docker;
+		
+	Dockerfile:
+		É um arquivo declarativo para construção de imagens;
+		FROM (baixa a imagem juntamente com as dependências)
+		RUN (comandos para modificar a imagem)
+		EXPOSE (expõe portas específicas)
+
+As imagens docker são executadas dentro de um processo do sistema operacional, ou seja, são imutáveis. Mas é possível realizar
+alteração pois existe uma camada de read/write mas ela não altera a imagem, portanto, tudo o que foi escrito ali será perdido
+caso o container seja destruído;
+
+Se eu quiser que essas alterações sejam refletidas neste container, eu preciso realizar um commit, onde será gerado uma outra
+imagem com essas alterações;
+
+As imagens ficam salvas do Image Registry, com isso o comando "FROM" faz um pull desta imagem para monta-la;
+
+Os três pontos do docker são: namespace, cgroups e filesystem; com a junção dos três o docker criou um Docker Host onde ele
+irá executar.
+Executando junto com ele o deamon - API que é um API que por ele é possível realizar a comunicação com o docker.
+Está comunicação é feita pelo Docker Client (quando digitamos "docker ..." estamos chamando este client para pedir ao deamon
+executar uma determinada ação)
+
+O que tem dentro do docker host:
+	- deamon API: por onde é realizado os comandos quando digitamos "docker...";
+	- cache: quando é realizado um pull para o registry, ele armazena esses dados para que outros container possam utiliza-lo;
+	- volumes: salva as alterações que foram feitas em um container;
+	- network: para os containers se comunicarem, eles precisam de uma rede interna, docker host resolve isso;
+====================================================================================================================================================================
+COMANDOS DOCKER:
+	- "docker ps": lista todos os containers que estão rodando no momento;
+	- "docker run 'alguma coisa'": vai baixar uma imagem do registry (se não existir localmente); se não definir nada com ":" no final do nome da imagem, ele sempre
+	irá pegar a versão latest;
+	- "docker ps -a": lista todos os containers que estão rodando no momento e os que já foram executados;
+	- "docker run -it": é igual ao -i -t, o -i vai mandar o processo atachado junto com o terminal; -t vai deixar a gente digitar nesse terminal;
+	- "docker run --rm": vai remover assim que o processo for parado;
+	- "docker run -p": eu realizo um publish de uma porta para que seja possível fazer um redirecionamento de porta para que eu consiga acessar algum container;
+	- "docker run -d": d é desatach, então vai deixar o terminal livre para executar as coisas normalmente;
+	- "docker rm": remove os containers;
+	- "docker -f": mata a força o container;
+	- "docker --name": da um nome para o container;
+	- "docker exec": executa um comando pro container específico;
+	- "docker -v caminhaMinhaPasta:caminhoAondeEuQuero": cria um volume de uma pasta minha para dentro de um container;
+	- "docker volume create": cria umm volume que pode ser compartilhado com outros containers;
+	- "docker volume inspect": inspeciono o volume que digitei;
+	- "docker volume prune": limpa todos os volumes;
+	- "docker images": mostra todas as imagens que possuo;
+	- "docker rmi": exclui alguma imagem do docker;
+	- "docker build -t": com base no arquivo docker file que foi criado, ele vai criar uma imagem com base nos parametros passados;
+	- "docker rm $(docker ps -a -q) -f": exclui todos os containers que estão ativos e inativos;
+	- "docker network ls": lista todas as networks do docker;
+	- "docker network inspect": inspeciona alguma network;
+	- "docker attach": atacha o processo de algum container;
+	- "docker network create --driver {o drive que vai usar} {Nome da rede}": cria uma rede docker;
+	- "docker network connect {nome da rede} {container}: liga um container para uma rede;
+	- "docker images | grep nomeImagem": mostra todas as imagens que tenham o nome que você especificou;
+====================================================================================================================================================================
+COMANDOS DOCKERFILE:
+	- "FROM": especifica uma imagem que você quer trabalhar;
+	- "RUN": executa algum comado logo após de "baixar" a imagem;
+	- "WORKDIR": ele cria uma pasta dentro daquela imagem e vai te deixar ali dentro;
+	- "ENV": define variáveis de ambiente;
+	- "exc "$@": se colocado no final do arquivo .sh, poderá ser executado comandos depois desse entrypoint;
+	
+
+
+CONCEITOS IMPORTANTE:
+- O docker host é o meu PC e nele pode ter N containers, mas se algum deles estiver uma porta exporta, não necessariamente eu vou conseguir acessa-las 
+pois não estou na rede do docker neste momento. Pra isso eu preciso redirecionar alguma porta da minha rede pra acessar a porta do container, por exemplo,
+8080(minha porta):80(porta do container). Assim, irei conseguir acessar o container;
+
+- Conceito Bind Mounts:
+	- Ele monta um volume no seu computador pra dentro do container, assim se o container morrer o arquivo ainda vai estar lá;
+	- Diferença entre usar o -v e o --mount: o -v se o volume que voce digitar não existir ele cria, usando o --mount necessita que este volume já exista
+
+- O Registry do docker é o site www.hub.docker.com
+
+- No momento de construção(build) de uma nova imagem, caso seja uma imagem completamente nova, docker irá executar todos os passos e isso leverá um tempo,
+caso seja preciso novamente construir essa imagem, ele irá buscar no cache para ver se precisa rodar os comandos novamente ou não. Assim variações desta imagem
+podem utilizar desse cache/chunks que foi feito na primeira vez;
+
+- Quando colocado o CMD dentro de um dockerfile, assi que for executado o container ele irá executar o que foi definido. Mas se você colocar algum comando depois
+de definir a imagem, ele vai substituir o que está dentro desse CMD que você definiu. Ou seja, este CMD é um comando variável;
+O ENTRYPOINT ["comando", "parametro/CMD"] é um parametro fixo, e o CMD vem para subistuir o que vai depois do comando que foi definido.
+Por exemplo, ENTRYPOINT ["echo", "Teste"] CMD ["A"], o que vai ser exibido é A se a imagem for rodada;
+
+- ***IMPORTANTE***
+Caso a imagem não tenha download durante 90 dias, o docker retira ele de lá;
+
+- Network do docker:
+	Uma rede interna, ou seja, assim é possivel um container se comunicar com o outro;
+	Tipos de network docker:
+		- Brigde (default):
+		- Host: mescla a network do docker com o dockerHost (minha máquina);
+		- Overlay: quando voce tem docker em diferentes máquinas e precisa que eles se comuniquem, você cria uma rede orverlay;
+		- maclan: MacAddress;
+		- None: o container vai ficar isolado, sem participar de nenhuma rede;
+	
+	Entrando mais afundo nos tipos de network:
+		- Brigde:
+			- Quando rodar uma imagem e não for especificado o tipo de network que ele vai utilizar, por padrão, vai ser a brigde;
+			Containers em rede diferente não se comunicam;
+			
+- Diferença entre ENTRYPOINT e COMMAND
+	- ENTRYPOINT: é fixo, não pode ser alterado por algum comando na hora de subir o container, por exemplo, expor uma porta específica do projeto;
+	- CMD: ele é variado de acordo com o parâmetro passado para ele, concatenando o comando para dentro do ENTRYPOINT;
+	
+
+- Multistage Building
+	- Você pode criar um DockerFile e ter diferentes "steps" que conversam entre si para que você consiga chama-los em diferentes estágios do build da solução
+

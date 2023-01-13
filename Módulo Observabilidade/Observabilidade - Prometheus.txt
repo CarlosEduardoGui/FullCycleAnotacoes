@@ -1,0 +1,46 @@
+O que é o Prometheus?
+	- Sistema de monitoria de métricas e alarmes;
+	- Criado pela SoundCloud e é open-source;
+	- Fáci visualização dos dados em conjunto com Grafana;
+	- Storage eficiente;
+	- Diversidade de clients e integrações;
+==============================================================================================
+											CONCEITOS
+	- Push: existe um "agent" que manda as informações para o serviço monitor; (ElasticStack)
+	- Pull: o serviço monitor captura de tempos em tempos os dados da aplicação; (Prometheus)
+	
+	- O pull é via HTTP e para isso a aplicação precisa disponibilizar um endpoint, normalmente /metrics;
+	- Você precisa adaptar sua aplicação ao formato do Prometheus;
+	
+	- Exporter: é uma interface para tecnologias que você não desenvolveu. Ex.: MySQL, Nginx...;
+================================================================================================
+											Arquitetura
+	- Prometheus Server: acessar para visualizar diagrama: https://prometheus.io/assets/architecture.png
+	- Retrieval (orquestra os recebimentos)
+	- TSDB (Time series Database): Guarda a informações uma atrás da outra conforme o tempo passa;
+================================================================================================
+											Armazenamento
+	- Quanto mais novos os dados, mais precisão, pois os dados mais antigos são comprimidos para
+	diminuir o espaço de armazenamento;
+================================================================================================
+											Counter (métrica)
+	- O que é o Counter: 
+		- É um contador de valor sempre incremental;
+		- Prometheus consegue absorver falhas no caso esse número tenha um eventual reset;
+================================================================================================
+											Gauge (métrica)
+	- O que é Gauge:
+		- Valor que pode possuir variações com o tempo - Aumentar/Diminuir/Estabilizar;
+================================================================================================
+											Histogram (métrica)
+	- O que é Histogram:
+		- Distribuição de frequência;
+		- Medição é baseado em amostras;
+		- Consegue agregar valores;
+================================================================================================
+											Summary (métrica)
+	- O que é Summary:
+		- Muito similar ao Histogram;
+		- Com o Summary os valores são calculados no servidor de aplicação não no Prometheus;
+		- Bom para aproximação de valores;
+		

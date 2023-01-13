@@ -1,0 +1,24 @@
+	- O que é Observabilidade?
+		A Observabilidade é definida como uma medida de quão bem os estados internos de um sistema podem ser
+		inferidos a partir do conhecimento das saídas externas desse sistema.
+		É a forma de como você vai analisar a saída de dado para entender como ele está se comportando;
+	
+	- Diferença entre Observabilidade e Monitoramento?
+		Monitoramento:
+			- Monitoramento nos mostra que há algo errado;
+			- Monitoramento se baseia em saber com antecedência quais sinais você deseka monitorar;
+
+		Observabilidade:
+			- Observabilidade nos permite perguntar o porquê
+	
+	- Três Pilares da Observabilidade:
+		- Métricas:
+			- Qtde de memória livre;
+			- Qtdes de pods livres;
+			- Coisas que podem ser quantificadas tanto técnicos como também de negócio;
+		
+		- Logs:
+			- Resultado de um determinado evento;
+		
+		- Tracing (rastreabilidade):
+			- Ordem do evento. O passo a passo até o fim daquele evento;

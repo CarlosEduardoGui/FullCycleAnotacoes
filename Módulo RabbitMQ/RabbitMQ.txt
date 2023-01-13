@@ -1,0 +1,36 @@
+============================Sobre o RabbitMQ============================
+
+	- Implementa AMQP, MQTT, STOMP e HTTP
+	- Desenvolvido em Erlang
+	- Desacoplamento entre serviços
+	- Rápido e Poderoso
+	- Padrão de Mercado
+
+============================Por debaixo dos panos============================
+	
+	- Todos os protocolos citados acima são conexões TCP. A primeira vez para se conectar é demorado,
+por conta disto o RabbitMQ abre uma única conexão e as demais conexões são chamadas de "Channel".
+Isso é chamado de Mutiplexing connectios. Para cada "Channel" é alocado um Thread
+
+============================Funcionamento básico============================
+	
+	- Publisher: É o cara que cria as mensagens;
+	- Consumir: É o cara que consume as mensagens de uma fila específica;
+	- Queue: onde é recebido as mensagens;
+	- Exchange: recebe as mensagens do Publisher e sabe pra qual fila essa mensagem precisa ser enviada.
+	Por que o Publisher pode querer enviar a mensagem para N filas;
+	
+	**Importante: No RabbitMQ você nunca publica uma mensagem direto para a Queue, ela é precisa ser recebida
+	pelo Exchange;
+
+	- Tipos de Exchange:
+		- Direct:
+			- Vai mandar especificamente para uma fila;
+				- Para isso é preciso marcar a Queue com um Bind, que neste caso é uma Routing Key;
+		- Fanout:
+			- Ela manda a mensagem para todas as filas que estão relacionadas com a Exchange;
+		- Topic:
+			- Pode se colocar regras que irá enviar a mensagem para alguma fila específica;
+		- Headers:
+			- No cabeçalho você pode identificar para qual fila a mensagem derá ir;
+	

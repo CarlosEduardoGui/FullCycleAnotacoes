@@ -1,0 +1,31 @@
+	ELK: 
+		- ElasticSearch
+			- Search engine e analytics;
+			- Rápido;
+			- Escalável;
+			- API REST de comunicação;
+			- Análise e visualização geoespacial;
+			
+		- Logstash
+			- Processaro de dados através de pipelines que consegue receber, transformar e enviar dados simultaneamente;
+			- Engine coletora de dados em tempo real;
+			- Trabalha com pipelines;
+			- Recebe dados de múltiplas fontes;
+			- Normaliza e transforma dados;
+			- Envia dados para múltiplas fontes;
+			
+		- Kibana
+			- Permite usuários a visualizarem os dados do elasticSearch em diversas perspectivas;
+			- Ferramenta de visualização e exploração de dados;
+			- Integrado com o ElasticSearch;
+			- Agregadores e filtragem de dados;
+			
+	Qual a diferença entre ELK Stack e Elastic Stack?
+		- Beats:
+			- Agente Coletor de dados;
+				- Pode pegar as informações (logs) e mandar diretamente para o Logstash ou ElasticSearch;
+				- Logs, Métricas, Network data, Audit Data, Uptime, Monitoring;
+			- Você pode construir seu próprio Beat;
+		
+		- Elastic Stack:
+			- É a junção do ELK com o Beats e por conta disso é a modernização do Elastic;
