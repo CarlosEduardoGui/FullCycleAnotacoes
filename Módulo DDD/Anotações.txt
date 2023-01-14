@@ -38,3 +38,19 @@
 		Infra (aonde se é realizado a comunicação com o mundo externo)
 		- Model / Entity
 			- customer.cs / costumerModel.cs (aqui terá os gets e sets)
+			
+================================== Value Objects ==================================
+	
+	- "Quando você se preocupa apenas com os atributos de um elemento de um model,
+	classifique isso como um value object" Evans, Eric;
+	
+	- "Trate o Value Object como imutável" Evans, Eric;
+	
+	- Ter que ser autovalidado;
+	
+	- Não tem identificador, ele é somente um conjunto de propriedades;
+	
+================================== Agregados ==================================
+
+	- "Um agregado é um conjunto de objetos associados que tratamos como uma unidade
+	para propósitos de mudança de dados" Evans, Eric;
