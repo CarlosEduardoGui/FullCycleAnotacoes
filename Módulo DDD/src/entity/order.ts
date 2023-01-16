@@ -15,21 +15,27 @@ export default class Order {
         this.validate();
     }
 
-    validate(){
-        if(this._id === ""){
+    validate(): boolean {
+        if (this._id === "") {
             throw new Error("Id is required");
         }
 
-        if(this._costumerId === ""){
+        if (this._costumerId === "") {
             throw new Error("Custumer Id is required");
         }
 
-        if(this._items === undefined || this._items.length === 0){
+        if (this._items === undefined || this._items.length === 0) {
             throw new Error("Items are required");
         }
+
+        if (this._items.some(item => item.quantity <= 0)) {
+            throw new Error("Quantity must be greater than zero");
+        }
+
+        return true;
     }
 
     total(): number {
-        return this._items.reduce((total, item) => total + item._price, 0);
+        return this._items.reduce((total, item) => total + item.orderItemTotal(), 0);
     }
 }
